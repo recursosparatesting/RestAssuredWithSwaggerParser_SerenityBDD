@@ -1,0 +1,44 @@
+name: Pruebas utilizando RestAssured y Swagger Parser
+
+on:
+    workflow_dispatch:
+      inputs:
+        datafile:
+          description: 'Url de archivo google sheet de datos de entrada'
+          required: true
+          default: 'https://docs.google.com/spreadsheets/d/1YCgtF6e6OWemd84DBz2s_f29QzEcfwxAvUEhFs6G2Zk'
+
+    push:
+      branches:
+        - main
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout del Repositorio
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: 'gradle'
+
+      - name: Ejecutar Pruebas Serenity BDD
+        run: gradle clean test aggregate --Durl.data=${{ github.event.inputs.datafile }}
+
+
+      - name: Cargar Reporte Serenity (Artifact)
+        uses: actions/upload-artifact@v4
+        with:
+          name: serenity-report-${{ github.sha }}
+          path: target/site/serenity
+          retention-days: 90
+          
+      - name: Generar Resumen de la Ejecución
+        run: |
+          echo "### ✅ Pruebas Ejecutadas con Éxito" >> $GITHUB_STEP_SUMMARY
+          echo "El reporte de Serenity BDD se ha generado y está disponible como Artifact." >> $GITHUB_STEP_SUMMARY
+          echo "Revisa el artifact 'serenity-report-${{ github.sha }}' para ver los detalles." >> $GITHUB_STEP_SUMMARY

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><testsuite errors="0" failures="1" name="Consulta el servicio de Pet" skipped="0" tests="1" time="0.9" timestamp="2025-12-11 06:31:53"><testcase name="Consulta todas las mascotas deacuerdo a un estado especifico"><failure message="Expected Se obtuvo el archivo de datos para ejecutar las pruebas ? :&#10;Expected: is &lt;true&gt;&#10;     but: was &lt;false&gt;" type="java.lang.AssertionError">Expected Se obtuvo el archivo de datos para ejecutar las pruebas ? :
+Expected: is &lt;true&gt;
+     but: was &lt;false&gt;</failure><system-err>Expected Se obtuvo el archivo de datos para ejecutar las pruebas ? :
+Expected: is &lt;true&gt;
+     but: was &lt;false&gt;
+stepdefinitions.SwaggerPetStepdefs.queSeTieneAccesoALaEspecificacionSwagger(SwaggerPetStepdefs.java:28)
+worker.org.gradle.process.internal.worker.GradleWorkerMain.run(GradleWorkerMain.java:69)
+worker.org.gradle.process.internal.worker.GradleWorkerMain.main(GradleWorkerMain.java:74)
+</system-err></testcase></testsuite>
