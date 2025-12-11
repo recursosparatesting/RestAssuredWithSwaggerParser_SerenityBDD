@@ -27,7 +27,7 @@ jobs:
           cache: 'gradle'
 
       - name: Ejecutar Pruebas Serenity BDD
-        run: gradle clean test aggregate --Durl.data=${{ github.event.inputs.datafile }}
+        run: gradle clean test aggregate -Durl.data=${{ github.event.inputs.datafile }}
 
 
       - name: Cargar Reporte Serenity (Artifact)
