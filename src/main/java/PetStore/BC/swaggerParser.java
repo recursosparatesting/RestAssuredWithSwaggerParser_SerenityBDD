@@ -1,43 +1,26 @@
 package PetStore.BC;
 
-import io.swagger.parser.OpenAPIParser;
+
+import PetStore.Utils.InputFiles;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.Operation;
 import io.swagger.v3.oas.models.PathItem;
 import io.swagger.v3.oas.models.media.MediaType;
 import io.swagger.v3.oas.models.media.Schema;
 import io.swagger.v3.oas.models.parameters.RequestBody;
-import io.swagger.v3.parser.core.models.ParseOptions;
 import io.swagger.v3.parser.core.models.SwaggerParseResult;
 
 import java.util.Map;
 
+
 public class swaggerParser {
 
-    public static void parseando(){
-        //localizacion del archivo swagger
-        //String location =  "https://petstore3.swagger.io/api/v3/openapi.json";
-        //String location =  "https://stapi.co/api/v1/rest/common/download/stapi.yaml";
-        String location =  "src/main/resources/openapiLibrary.json";
-        //String location =  "https://api.oceandrivers.com/static/resources.json";
+    InputFiles inputfiles = new InputFiles();
 
-        // CONFIGURACIÓN IMPORTANTE:
-        // setResolve(true) intenta resolver las referencias automáticamente,
-        // pero aun así haremos una búsqueda manual para asegurar que veas los campos.
-        ParseOptions options = new ParseOptions();
-        options.setResolve(true);
-        options.setResolveFully(true); // Esto intenta traer todos los esquemas anidados al objeto principal
+    public void parseOfOas(){
 
-        SwaggerParseResult result = new OpenAPIParser().readLocation(location, null, options);
-        OpenAPI openAPI = result.getOpenAPI();
-
-        if (openAPI == null) {
-            System.err.println("Error leyendo la API.");
-            result.getMessages().forEach(System.err::println);
-            return;
-        }
-
-        System.out.println("--- API: " + openAPI.getInfo().getTitle() + " ---\n");
+        SwaggerParseResult oasFile = this.inputfiles.getOasFile();
+        OpenAPI openAPI = oasFile.getOpenAPI();
 
         //se recorren los endpoints
         for (Map.Entry<String, PathItem> pathEntry : openAPI.getPaths().entrySet()) {
@@ -66,7 +49,7 @@ public class swaggerParser {
         RequestBody requestBody = operation.getRequestBody();
 
         if (requestBody == null) {
-            System.out.println("   (No tiene Request Body definido)");
+            System.out.println("   (Este metodo No tiene Request Body definido)");
             return;
         }
 

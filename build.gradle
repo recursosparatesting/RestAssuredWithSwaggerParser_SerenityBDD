@@ -17,12 +17,16 @@ dependencies {
     testImplementation 'org.junit.jupiter:junit-jupiter-engine:5.14.0'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 
-    testImplementation 'net.serenity-bdd:serenity-junit:4.3.1'
+    testImplementation 'net.serenity-bdd:serenity-junit:4.2.32'
     implementation 'net.serenity-bdd:serenity-core:4.2.32'
     implementation 'net.serenity-bdd:serenity-cucumber:4.2.32'
     implementation 'net.serenity-bdd:serenity-screenplay:4.2.32'
+    implementation 'net.serenity-bdd:serenity-screenplay-rest:4.2.32'
 
     implementation 'io.swagger.parser.v3:swagger-parser:2.1.18'
+
+    implementation 'org.apache.poi:poi:5.2.5'
+    implementation 'org.apache.poi:poi-ooxml:5.2.5'
 }
 
 test {

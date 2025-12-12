@@ -8,6 +8,12 @@ on:
           required: true
           default: 'https://docs.google.com/spreadsheets/d/1YCgtF6e6OWemd84DBz2s_f29QzEcfwxAvUEhFs6G2Zk'
 
+        oasfile:
+          description: 'Url de la especificacion OAS - archivo json de swagger'
+          required: true
+          default: 'https://petstore3.swagger.io/api/v3/openapi.json'
+
+
     push:
       branches:
         - main
@@ -27,7 +33,7 @@ jobs:
           cache: 'gradle'
 
       - name: Ejecutar Pruebas Serenity BDD
-        run: gradle clean test aggregate -Durl.data=${{ github.event.inputs.datafile }}
+        run: gradle clean test aggregate -Durl.data=${{ github.event.inputs.datafile }} -Durl.oas=${{ github.event.inputs.oasfile }}
 
 
       - name: Cargar Reporte Serenity (Artifact)
