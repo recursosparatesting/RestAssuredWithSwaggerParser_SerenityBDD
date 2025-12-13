@@ -1,13 +1,12 @@
 package stepdefinitions;
 
 import PetStore.BC.swaggerParser;
-import PetStore.Utils.DataInputValidator;
 import PetStore.Utils.InputFiles;
-import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import io.cucumber.java.Before;
+import net.serenitybdd.annotations.Steps;
 import net.serenitybdd.screenplay.actors.OnStage;
 import net.serenitybdd.screenplay.actors.OnlineCast;
 
@@ -21,7 +20,9 @@ public class SwaggerPetStepdefs {
 
     InputFiles getInputFiles = new InputFiles();
     swaggerParser mySwaggerParser = new swaggerParser();
-    DataInputValidator dataInputValidator = new DataInputValidator();
+
+    @Steps
+    PetApiActions petapiActions;
 
     @Before
     public void Inicio(){
@@ -33,23 +34,21 @@ public class SwaggerPetStepdefs {
     public void queSeTieneAccesoALaEspecificacionSwagger() {
         theActorInTheSpotlight().should(seeThat(QdataPetStore(getInputFiles.validDataFile())));
         theActorInTheSpotlight().should(seeThat(QdataPetStore(getInputFiles.validOasFile())));
-        dataInputValidator.dataInput();
-    }
 
+    }
 
     @When("Se envian los parametros requeridos")
     public void seEnvianLosParametrosRequeridos() {
-        System.out.println("solucion ....");
+
+        petapiActions.executeTestCases(null);
     }
 
-    @Then("se obtiene un codigo de respuesta")
+
+
+    @Then("se obtiene un codigo de respuesta y los datos de la respuesta")
     public void seObtieneUnCodigoDeEstado() {
         System.out.println("solucion ....");
     }
 
-    @And("se obtienen los datos de las mascotas")
-    public void seObtienenDatosMascotas() {
-        System.out.println("solucion ....");
-    }
 
 }

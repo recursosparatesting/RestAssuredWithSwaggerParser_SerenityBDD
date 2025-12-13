@@ -10,11 +10,14 @@ import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 import static PetStore.Utils.PathsAndConstants.*;
 
 public class InputFiles {
-
+    DataInputValidator dataInputValidator = new DataInputValidator();
 
     public String getDataFile(){
         boolean result = false;
@@ -26,7 +29,7 @@ public class InputFiles {
         boolean result = false;
         String urlString = getDataFile();
         String nombreArchivoLocal = pathDataFile + File.separator + fileDataFileName;
-
+        List<Map<String, Object>> dataInput = new ArrayList<>();
         try {
             URL url = new URL(urlString);
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
@@ -44,12 +47,14 @@ public class InputFiles {
                 outputStream.close();
                 inputStream.close();
                 System.out.println("Archivo descargado exitosamente como " + nombreArchivoLocal);
-                result=true;
+                dataInput= dataInputValidator.dataInput();
+                result= !dataInput.isEmpty();
+
             } else {
                 System.out.println("Error al descargar el archivo: " + responseCode);
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            System.out.println("Error al validar el archivo excel con los datos para ejecutar el caso: " + e.getMessage());
         }
         return result;
     }

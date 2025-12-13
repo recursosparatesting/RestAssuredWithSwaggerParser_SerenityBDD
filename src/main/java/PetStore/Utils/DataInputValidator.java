@@ -20,7 +20,7 @@ public class DataInputValidator {
         String numCaso="";
         Sheet sheet = null;
         try{
-            FileInputStream fileInputStream = new FileInputStream(new File(pathDataFile + File.separator + fileDataFileName));
+            FileInputStream fileInputStream = new FileInputStream(pathDataFile + File.separator + fileDataFileName);
             Workbook workbook = new XSSFWorkbook(fileInputStream);
 
             int numerSheets = workbook.getNumberOfSheets();
@@ -39,41 +39,45 @@ public class DataInputValidator {
             }
 
 
-            if(sheet!=null && !numCaso.isEmpty()){
-                Row headerRow = sheet.getRow(0);
-                int j = 0;
-                for (Row currentRow : sheet){
-                    Iterator<Cell> cellIterator = currentRow.cellIterator();
-                    if(currentRow.equals(headerRow)){
-                        continue;
-                    }
+            if((sheet != null)) {
+                assert numCaso != null;
+                if (!numCaso.isEmpty()) {
+                    Row headerRow = sheet.getRow(0);
 
-                    while (cellIterator.hasNext()) {
-                        Cell currentCell = cellIterator.next();
-                        Object cellObject = getCellValue(currentCell);
-                        if (cellObject != null && !cellObject.toString().isEmpty()){
+                    for (Row currentRow : sheet) {
+                        Iterator<Cell> cellIterator = currentRow.cellIterator();
+                        if (currentRow.equals(headerRow)) {
+                            continue;
+                        }
 
-                            String header = getCellValue(headerRow.getCell(j));
-                            String cellValue = getCellValue(currentCell);
-                            rowMap.put(header, cellValue);
-                            j++;
+                        int j = 0;
+                        while (cellIterator.hasNext()) {
+                            Cell currentCell = cellIterator.next();
+                            Object cellObject = getCellValue(currentCell);
+                            if (cellObject != null && !cellObject.toString().isEmpty()) {
 
-                        }else{
-                            break;
+                                String header = getCellValue(headerRow.getCell(j));
+                                String cellValue = getCellValue(currentCell);
+                                rowMap.put(header, cellValue);
+                                j++;
+
+                            } else {
+                                break;
+                            }
+
+                        }
+                        if (!rowMap.isEmpty()) {
+                            data.add(rowMap);
+                            rowMap = new HashMap<>();
                         }
 
                     }
-                    if(!rowMap.isEmpty()){
-                        data.add(rowMap);
-                        rowMap = new HashMap<>();
-                    }
-
                 }
             }
 
 
         } catch (Exception e) {
-
+                System.out.println("Error al extraer los datos del archivo excel con los datos para ejecutar el caso " + e.getMessage());
         }
         return data;
 
@@ -116,67 +120,4 @@ public class DataInputValidator {
         return (T) "";
     }
 
-    public ArrayList<Object> dataInputTitles(){
-        ArrayList<Object> titles = new ArrayList<>();
-        String numCaso="";
-        Sheet sheet = null;
-        try{
-            FileInputStream fileInputStream = new FileInputStream(new File(pathDataFile + File.separator + fileDataFileName));
-            Workbook workbook = new XSSFWorkbook(fileInputStream);
-            int numerSheets = workbook.getNumberOfSheets();
-
-            for(int i=0; i<numerSheets; i++){
-                sheet = workbook.getSheetAt(i);
-                if (sheet != null) {
-                    Row headerRow = sheet.getRow(1);
-                    if (headerRow != null) {
-                        numCaso = headerRow.getCell(0).getStringCellValue();
-                        if(numCaso!=null &&  numCaso.isEmpty() ){
-                            break;
-                        }
-                    }
-                }
-            }
-
-            if(sheet!=null && !numCaso.isEmpty()){
-
-                Row currentRow = sheet.getRow(0);
-                if (currentRow != null) {
-                    for (int j = 0; j < currentRow.getLastCellNum(); j++) {
-                        Cell currentCell = currentRow.getCell(j);
-                        Object title = getCellValue(currentCell);
-                        if(title!=null && !title.toString().isEmpty()) {
-                            titles.add(title);
-                        }
-                    }
-
-                }
-            }
-        } catch (Exception e) {
-
-        }
-        return titles;
-
-    }
-
-    public List<ArrayList<Object>> ListDataInput(Sheet sheet){
-        ArrayList<Object> dataLine = new ArrayList<>();
-        List<ArrayList<Object>> data = new ArrayList<>();
-        try{
-            for (Row currentRow : sheet) {
-                if (currentRow != null) {
-                    for (int j = 0; j < currentRow.getLastCellNum(); j++) {
-                        Cell currentCell = currentRow.getCell(j);
-                        Object valueCell = getCellValue(currentCell);
-                        dataLine.add(valueCell);
-                    }
-                    data.add(dataLine);
-                }
-            }
-        } catch (Exception e) {
-
-        }
-        return data;
-
-    }
 }
