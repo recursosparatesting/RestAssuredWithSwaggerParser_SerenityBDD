@@ -1,6 +1,8 @@
 package PetStore.BC;
 
 import PetStore.Utils.InputFiles;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.restassured.response.Response;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.Operation;
@@ -33,6 +35,8 @@ public class GetSpecification {
         List<String> listSecurityReq    = new ArrayList<>();
         Map<String, String> queryParam = new HashMap<>();
         Response response = null;
+        Schema<?> squema=null;
+        String schemaAsJson = null;
 
         SwaggerParseResult oasFile = getInputFiles.getOasFile();
         OpenAPI openAPI = oasFile.getOpenAPI();
@@ -58,8 +62,26 @@ public class GetSpecification {
                                     }
                                 }
                             }
-                           response = getPetition(pathName, queryParam);
-                        Schema<?> squema= getResponseSchema( openAPI,  pathName, method);
+                        response = getPetition(pathName, queryParam);
+                        squema= getResponseSchema( pathItem, method);
+                        //Map<String, Object>  dinamicMap = response.jsonPath().getMap("$");
+                        ObjectMapper mapper = new ObjectMapper();
+                        // Nota: Es posible que necesites configurar el mapper para ignorar nulos si el esquema es muy estricto
+
+                        try {
+                            schemaAsJson = mapper.writeValueAsString(squema);
+                            System.out.println("Validación de esquema exitosa.");
+                        } catch (JsonProcessingException e) {
+                            throw new RuntimeException("La respuesta no cumple con el esquema del Swagger: " + e.getMessage(), e);
+                        }
+
+                        // Usamos RestAssured para validar
+                       // response.then().assertThat().body(JsonSchemaValidator.matchesJsonSchema(schemaAsJson));
+
+                        Map<String, Schema> campos = squema.getItems().getProperties();
+                        for (Map.Entry<String, Schema> campo : campos.entrySet()) {
+
+                        }
                     }
                 }
             }

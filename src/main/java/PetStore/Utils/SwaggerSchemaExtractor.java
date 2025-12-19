@@ -1,5 +1,6 @@
 package PetStore.Utils;
 
+import io.swagger.models.HttpMethod;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.Operation;
 import io.swagger.v3.oas.models.PathItem;
@@ -12,12 +13,10 @@ public class SwaggerSchemaExtractor {
     /**
      * Extracts the response schema for a given path and HTTP method from the OpenAPI specification.
      *
-     * @param path   The endpoint path (e.g., "/pet/{petId}").
      * @param httpMethod The HTTP method (e.g., "GET", "POST").
      * @return The response Schema object, or null if not found.
      */
-    public static Schema<?> getSchemaFromResponse(OpenAPI openAPI, String path, PathItem.HttpMethod httpMethod) {
-        PathItem pathItem = openAPI.getPaths().get(path);
+    public static Schema<?> getSchemaFromResponse(PathItem pathItem, PathItem.HttpMethod httpMethod) {
         if (pathItem == null) {
             return null;
         }

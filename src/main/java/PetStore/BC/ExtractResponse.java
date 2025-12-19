@@ -2,6 +2,7 @@ package PetStore.BC;
 
 import PetStore.Utils.SwaggerSchemaExtractor;
 import io.restassured.response.Response;
+import io.swagger.models.HttpMethod;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.PathItem;
 import io.swagger.v3.oas.models.media.Schema;
@@ -15,8 +16,8 @@ public class ExtractResponse {
      * @param httpMethod The HTTP method for the request.
      * @return The Schema object for the response.
      */
-    public static Schema<?> getResponseSchema(OpenAPI openAPI, String path, PathItem.HttpMethod httpMethod) {
-        return SwaggerSchemaExtractor.getSchemaFromResponse(openAPI, path, httpMethod);
+    public static Schema<?> getResponseSchema(PathItem path, PathItem.HttpMethod httpMethod) {
+        return SwaggerSchemaExtractor.getSchemaFromResponse(path, httpMethod);
     }
 
     /**
@@ -37,4 +38,23 @@ public class ExtractResponse {
         return response.getBody().asString();
     }
 
+    /**
+    * Extrae un valor específico del body, pero primero verifica si existe en el esquema.
+    *
+    * @param response  La respuesta de SerenityRest.
+    * @param schema    El esquema del Swagger.
+    * @param fieldName El nombre del campo que queremos extraer (ej: "id", "name").
+    * @return El valor del campo.
+    */
+    public static Object extractFieldIfInSchema(Response response, Schema<?> schema, String fieldName) {
+        // Verificamos si el esquema tiene propiedades y si contiene nuestro campo
+        if (schema.getProperties() != null && schema.getProperties().containsKey(fieldName)) {
+
+            // Opcional: Podrías validar el tipo de dato aquí usando schema.getProperties().get(fieldName).getType()
+
+            return response.jsonPath().get(fieldName);
+        } else {
+            throw new IllegalArgumentException("El campo '" + fieldName + "' no está definido en el esquema del Swagger para esta operación.");
+        }
+    }
 }
