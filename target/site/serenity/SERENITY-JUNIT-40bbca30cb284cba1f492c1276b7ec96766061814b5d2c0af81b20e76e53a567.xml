@@ -1,1 +1,1 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?><testsuite errors="0" failures="0" name="Consulta el servicio de Pet" skipped="0" tests="1" time="6.17" timestamp="2025-12-13 11:06:44"><testcase name="Consulta todas las mascotas deacuerdo a un estado especifico"/></testsuite>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><testsuite errors="0" failures="0" name="Consulta el servicio de Pet" skipped="0" tests="1" time="52.24" timestamp="2025-12-18 06:18:47"><testcase name="Consulta todas las mascotas deacuerdo a un estado especifico"/></testsuite>

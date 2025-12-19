@@ -18,9 +18,14 @@
 *.zip
 *.tar.gz
 *.rar
+*.xls
+*.xlsx
 
 # Carpetas - Entorno
 target
+target/
+target/site/
+target/site/serenity/
 .idea
 .gradle
 .tmp

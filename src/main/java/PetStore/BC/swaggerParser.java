@@ -38,43 +38,14 @@ public class swaggerParser {
 
                 // FILTRO: Solo nos interesan métodos que suelen tener Body
                 if (method == PathItem.HttpMethod.POST || method == PathItem.HttpMethod.PUT || method == PathItem.HttpMethod.PATCH) {
-                    extractBodyAndParams(operation, openAPI);
+                  //  extractBodyAndParams(operation, openAPI);
                 }
             }
         }
 
     }
 
-    private static void extractBodyAndParams(Operation operation, OpenAPI openAPI) {
-        RequestBody requestBody = operation.getRequestBody();
 
-        if (requestBody == null) {
-            System.out.println("   (Este metodo No tiene Request Body definido)");
-            return;
-        }
-
-        if (requestBody.getContent() == null) return;
-
-        // Generalmente nos interesa JSON
-        MediaType jsonContent = requestBody.getContent().get("application/json");
-
-        // Si no hay JSON, probamos con form-data o xml (opcional)
-        if (jsonContent == null && !requestBody.getContent().isEmpty()) {
-            // Tomamos el primero que haya
-            jsonContent = requestBody.getContent().values().iterator().next();
-        }
-
-        if (jsonContent != null) {
-            System.out.println("   [BODY ENCONTRADO]");
-
-            // 1. Buscamos el ejemplo en el MediaType
-            printJsonExample(jsonContent);
-
-            // 2. Imprimimos la estructura y los campos (tu lógica anterior)
-            Schema<?> schema = jsonContent.getSchema();
-            inspectSchema(schema, openAPI, 1);
-        }
-    }
 
 
     private static void printJsonExample(MediaType jsonContent) {
@@ -110,40 +81,6 @@ public class swaggerParser {
         System.out.println("   (No se encontró un ejemplo de JSON explícito en la especificación.)");
     }
 
-    // Metodo recursivo para extraer propiedades (parámetros del body)
-    private static void inspectSchema(Schema<?> schema, OpenAPI openAPI, int level) {
-        String indent = "   " + "  ".repeat(level);
 
-        // CASO 1: Es una referencia ($ref) -> Hay que buscarla en Components
-        if (schema.get$ref() != null) {
-            String refName = schema.get$ref().substring(schema.get$ref().lastIndexOf('/') + 1);
-            System.out.println(indent + "-> Refiere al modelo: '" + refName + "'");
-
-            // Buscamos el esquema real en los componentes
-            Schema<?> actualSchema = openAPI.getComponents().getSchemas().get(refName);
-            if (actualSchema != null) {
-                inspectSchema(actualSchema, openAPI, level);
-            }
-        }
-        // CASO 2: Tiene propiedades directas (Es un objeto)
-        else if (schema.getProperties() != null) {
-            System.out.println(indent + "-> Propiedades (Campos):");
-            for (Map.Entry<String, Schema> prop : schema.getProperties().entrySet()) {
-                String fieldName = prop.getKey();
-                String fieldType = prop.getValue().getType();
-                System.out.println(indent + "   - " + fieldName + " (" + fieldType + ")");
-
-                // Si el campo es a su vez otro objeto complejo, profundizamos (opcional)
-                if (prop.getValue().get$ref() != null) {
-                    inspectSchema(prop.getValue(), openAPI, level + 2);
-                }
-            }
-        }
-        // CASO 3: Es un Array
-        else if ("array".equals(schema.getType())) {
-            System.out.println(indent + "-> Es una Lista (Array) de:");
-            inspectSchema(schema.getItems(), openAPI, level + 1);
-        }
-    }
 
 }

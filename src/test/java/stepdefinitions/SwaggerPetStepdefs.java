@@ -40,7 +40,7 @@ public class SwaggerPetStepdefs {
     @When("Se envian los parametros requeridos")
     public void seEnvianLosParametrosRequeridos() {
 
-        petapiActions.executeTestCases(null);
+        petapiActions.executeTestCases();
     }
 
 

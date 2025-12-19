@@ -1,6 +1,8 @@
 package stepdefinitions;
 
 
+import PetStore.BC.GetSpecification;
+import PetStore.BC.swaggerParser;
 import PetStore.Utils.DataInputValidator;
 import net.serenitybdd.annotations.Step;
 
@@ -8,11 +10,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+
 public class PetApiActions {
     DataInputValidator dataInputValidator = new DataInputValidator();
+    GetSpecification getSpec = new GetSpecification();
 
+    swaggerParser swaggerparser = new swaggerParser();
     @Step("Ejecuta el caso de prueba para la url y metodo indicados en los datos de entrada")
-    public void executeTestCases(Map<String, Object> petData){
+    public void executeTestCases(){
         List<Map<String, Object>> dataInput = dataInputValidator.dataInput();
 
         for(Map<String, Object> mapa: dataInput){
@@ -23,8 +28,8 @@ public class PetApiActions {
                 System.out.println("Valor de campo: "+fieldValue.toString());
             }
         }
-
-        System.out.println("PetApiActions");
+    //    swaggerparser.parseOfOas();
+        getSpec.prueba("Get","/pet/findByStatus");
     }
 
 
