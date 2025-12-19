@@ -27,6 +27,7 @@ target/
 target/site/
 target/site/serenity/
 .idea
+.idea/
 .gradle
 .tmp
 caches
